@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
 		motor = GetComponent<PlayerMotor>();
     }
 
-    // Update is called once per frame
     void Update()
     {
 		
@@ -37,7 +36,6 @@ public class PlayerController : MonoBehaviour
 		// If we pressed right mouse botton
 		if(Input.GetMouseButtonDown(1)){
 			RaycastHit hit;
-			Debug.Log("we are here");
 			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 			
 			if(Physics.Raycast(ray, out hit, 100))
@@ -54,11 +52,25 @@ public class PlayerController : MonoBehaviour
 		
 		void SetFocus(Interactable newFocus)
 		{
-			focus = newFocus;
+			if(newFocus != focus)
+			{
+				if(focus != null)
+					focus.OnDeFocused();
+				
+				focus = newFocus;
+				motor.FollowTarget(newFocus);
+			}
+			
+			newFocus.OnFocused(transform);
+			
 		}
         void RemoveFocus()
 		{
+			if(focus != null)
+				focus.OnDeFocused();
+			
 			focus = null;
+			motor.StopFollowingTarget();
 		}
     }
 }
