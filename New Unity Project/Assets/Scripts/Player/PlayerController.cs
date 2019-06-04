@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.EventSystems;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -18,6 +17,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 		
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+
 		// If we pressed left mouse botton
 		if(Input.GetMouseButtonDown(0)){
 			RaycastHit hit;
@@ -46,7 +49,6 @@ public class PlayerController : MonoBehaviour
 				{
 					SetFocus(interactable);
 				}
-				
 			}
 		}
 		
