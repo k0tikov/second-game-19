@@ -5,10 +5,10 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
-    //public event Action<Item> OnRightClickEvent;
 
     public delegate void OnInventorySlotChanged(Item item);
     public OnInventorySlotChanged onInventorySlotChangedCallback;
+
 
     public Image icon;
 	

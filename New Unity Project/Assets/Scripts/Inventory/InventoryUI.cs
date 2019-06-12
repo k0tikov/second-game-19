@@ -5,14 +5,12 @@ public class InventoryUI : MonoBehaviour
 {
     public Transform itemsParent;
     public GameObject inventoryUI;
-
     Inventory inventory;
-
-    EquipmentManager equipmentManager;
-
     InventorySlot[] slots;
 
-    //public event Action<Item> OnItemRightClickedEvent;
+    //public Transform equipmentParent;
+    EquipmentManager equipment;
+    //EquipSlot[] equipSlots;
 
 
     void Start()
@@ -20,14 +18,17 @@ public class InventoryUI : MonoBehaviour
         inventory = Inventory.instance;
         inventory.onItemChangedCallback += UpdateUI;
 
-        equipmentManager = EquipmentManager.instance;
-
-
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+
+
+        equipment = EquipmentManager.instance;
+        //equipment.onChangedCallback += UpdateEquipPanel;
+
+        //equipSlots = equipmentParent.GetComponentsInChildren<EquipSlot>();
 
         for (int i = 0; i < slots.Length; i++)
         {
-            slots[i].onInventorySlotChangedCallback += equipmentManager.EquipFromTheInventory;
+            slots[i].onInventorySlotChangedCallback += equipment.EquipFromTheInventory;
         }
     }
 
@@ -38,6 +39,19 @@ public class InventoryUI : MonoBehaviour
             inventoryUI.SetActive(!inventoryUI.activeSelf);
         }
     }
+
+    //void UpdateEquipPanel(Equipment item)
+    //{
+    //   for(int i = 0; i < slots.Length; i++)
+    //   {
+    //        equipSlots[i].item = item;
+    //   }
+
+
+    //}
+
+
+
 
     void UpdateUI()
     {

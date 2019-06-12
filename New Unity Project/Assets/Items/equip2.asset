@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8f6b9cc7a5346d46a251a0ab87d07e0, type: 3}
-  m_Name: item
+  m_Name: equip2
   m_EditorClassIdentifier: 
   name: New Item
-  icon: {fileID: 21300000, guid: 6fc27c9d7fc2d9448af6851bf935e6d2, type: 3}
+  icon: {fileID: 21300000, guid: e420c5bc93cb2604695a893500c897e3, type: 3}
   isDefaultItem: 0
-  equipSlot: 0
-  armorMod: 3
-  damageMod: 3
+  equipSlot: 2
+  armorMod: 2
+  damageMod: 2
