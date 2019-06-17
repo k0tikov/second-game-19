@@ -37,15 +37,18 @@ public class StatPanel : MonoBehaviour
     public void SetStats(params Stat[] charStats)
     {
         stats = charStats;
+        Debug.Log("SetStats");
     }
 
 
     // обновляем значения характеристик в панели
     public void UpdateStatValues()
     {
+        Debug.Log("UpdateStatValues");
         for (int i = 0; i < statDisplays.Length; i++)
         {
             statDisplays[i].valueText.text = stats[i].GetValue().ToString();
+            Debug.Log("UpdateStatValuesTest");
         }
     }
 

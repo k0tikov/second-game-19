@@ -34,7 +34,7 @@ public class Stat {
         int finalValue = baseValue;
 
         modifiers.ForEach(x => finalValue += x);
-
+        Debug.Log("GetValueTest");
         return finalValue;
 
     }
