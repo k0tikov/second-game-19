@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InventorySlot : MonoBehaviour, IPointerClickHandler
+public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler            
 {
 
     public delegate void OnInventorySlotChanged(Item item);
@@ -13,6 +13,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     public Image icon;
 	
 	public Item item;
+
+    [SerializeField] ItemTooltip tooltip;
 	
 	public void AddItem(Item newItem)
 	{
@@ -36,5 +38,19 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             if (item != null && onInventorySlotChangedCallback != null)
                 onInventorySlotChangedCallback.Invoke(item);
                 Debug.Log("EVENT IS WORKING");
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (item is Equipment)
+        {
+            tooltip.ShowTooltip((Equipment)item);
+        }
+        
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        tooltip.HideTooltip();
     }
 }

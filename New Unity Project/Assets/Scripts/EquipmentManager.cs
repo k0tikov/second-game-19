@@ -69,6 +69,7 @@ public class EquipmentManager : MonoBehaviour
         Equipment oldItem = null;
 
         // меняем иконку, но это надо перепроверить. вроде лишнее
+        equipSlots[slotIndex].icon.enabled = true;
         equipSlots[slotIndex].icon.sprite = newItem.icon;
         equipSlots[slotIndex].item = newItem;
 
@@ -108,7 +109,8 @@ public class EquipmentManager : MonoBehaviour
             // если смогли - удаляем ее из панели и массива
             currentEquipment[slotIndex] = null;
 
-            // удаляем иконки
+            // удаляем иконки и дизейблим фон картинки
+            equipSlots[slotIndex].icon.enabled = false;
             equipSlots[slotIndex].icon.sprite = null;
             equipSlots[slotIndex].item = null;
             if (onEquipmentChanged != null)
@@ -120,7 +122,5 @@ public class EquipmentManager : MonoBehaviour
             Debug.Log("МЕСТА В СУМКЕ НЕТ");
 
         }
-        //Debug.Log("not enough room");
-
     }
 }

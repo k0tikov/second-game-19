@@ -8,12 +8,12 @@ public class StatPanel : MonoBehaviour
 
     public static StatPanel instance;
 
-    private void Awake()
+    private void GetInstance()
     {
         instance = this;
+        
     }
     #endregion
-
 
     // наши актуальные характеристики
     public Stat[] stats;
@@ -26,11 +26,15 @@ public class StatPanel : MonoBehaviour
 
     public string[] statNames;
 
-    void Start()
+    void Awake()
     {
-  
+        //из-за говнокода пришлось синглтон сделать таким образом
+        GetInstance();
+
         statDisplays = statPanelParent.GetComponentsInChildren<StatDisplay>();
-        UpdateStatNames();
+
+        Debug.Log("GetInstance");
+        //UpdateStatNames();
     }
 
     // из PlayerStats сюда летят типы актуальных статов

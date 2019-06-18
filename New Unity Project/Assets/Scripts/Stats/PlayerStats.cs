@@ -21,12 +21,14 @@ public class PlayerStats : CharacterStats
     {
         EquipmentManager.instance.onEquipmentChanged += OnEquipmentChanged;
         statPanel = StatPanel.instance;
-        Debug.Log("PlayerStats");
-        // определяем типы статов
+        
+        // Определяем типы статов
         statPanel.SetStats(damage, armor);
-        Debug.Log("SetStatsAfter");
+        
+        // Обновляем статы (цифры) при старте. Тоже неправильно (наверное)
+        statPanel.UpdateStatNames();
         statPanel.UpdateStatValues();
-        Debug.Log("UpdateStatValuesAfter");
+        
 
     }
 
@@ -45,7 +47,7 @@ public class PlayerStats : CharacterStats
             armor.RemoveModifier(oldItem.armorMod);
         }
 
-        // обновляем панель со статами при каждом изменнии модифаера
-        //statPanel.UpdateStatValues();
+        // обновляем панель со статами при каждом изменении модифаера
+        statPanel.UpdateStatValues();
     }
 }
