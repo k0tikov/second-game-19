@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,89 +18,109 @@ public class EquipmentManager : MonoBehaviour
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChanged;
 
-
-    Equipment[] currentEquipment;
+    public event Action<InventorySlot> OnPointerEnterEvent;
+    public event Action<InventorySlot> OnPointerExitEvent;
+    public event Action<InventorySlot> OnRightClickEvent;
+    public event Action<InventorySlot> OnBeginDragEvent;
+    public event Action<InventorySlot> OnEndDragEvent;
+    public event Action<InventorySlot> OnDragEvent;
+    public event Action<InventorySlot> OnDropEvent;
 
     Inventory inventory;
-
-    public Transform equipmentParent;
-    EquipSlot[] equipSlots;
-
     StatPanel statPanel;
+    ItemTooltip itemTooltip;
+    public Transform equipmentParent;
 
-    private void Start()
+    EquipSlot[] equipSlots;
+    public Equipment[] currentEquipment;
+
+    public void Start()
     {
         inventory = Inventory.instance;
         statPanel = StatPanel.instance;
-        // CСчитаем сколько элементов жквипа в энумераторе
-        int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
+        itemTooltip = ItemTooltip.instance;
+        // Cчитаем сколько элементов эквипа в энумераторе
+        int numSlots = Enum.GetNames(typeof(EquipmentSlot)).Length;
         // Инициализируем массив длиной в кол-во элементов энумератора
         currentEquipment = new Equipment[numSlots];
 
         equipSlots = equipmentParent.GetComponentsInChildren<EquipSlot>();
 
+        // Right click
+        OnRightClickEvent += Unequip;
+        // Pointer enter
+        OnPointerEnterEvent += itemTooltip.ShowTooltip;
+        // Pointer exit
+        OnPointerExitEvent += itemTooltip.HideTooltip;
+        // Begin drag
+        OnBeginDragEvent += inventory.OnBeginDrag;
+        // End drag
+        OnEndDragEvent += inventory.OnEndDrag;
+        // Drag
+        OnDragEvent += inventory.Drag;
+        // Drop
+        OnDropEvent += inventory.Drop;
+
         for (int i = 0; i < equipSlots.Length; i++)
         {
-            equipSlots[i].onInventorySlotChangedCallback += UnequipFromItemPanel;
-            
+            equipSlots[i].OnPointerEnterEvent += OnPointerEnterEvent;
+            equipSlots[i].OnPointerExitEvent += OnPointerExitEvent;
+            equipSlots[i].OnRightClickEvent += OnRightClickEvent;
+            equipSlots[i].OnBeginDragEvent += OnBeginDragEvent;
+            equipSlots[i].OnEndDragEvent += OnEndDragEvent;
+            equipSlots[i].OnDragEvent += OnDragEvent;
+            equipSlots[i].OnDropEvent += OnDropEvent;
         }
     }
-    // Если итем - эквип, то вызываем метод Equip
-    public void EquipFromTheInventory(Item item)
+    // перегруженный метод, если передаем слот, а не итем
+    public void Equip(InventorySlot slot)
     {
-        Debug.Log("item name is " + item.name);
-
-        if (item is Equipment)
-        {
-            // удаляем итем из инвентаря
-            inventory.Remove(item);
-            //Debug.Log("item removed" + item);
- 
-            // вызываем метод добавления в эквип панель
-            Equip((Equipment)item);
+        Equipment equipment = slot.item as Equipment;
+        if (equipment != null)
+        {    
+            Equip(equipment);
         }
     }
-
-
     public void Equip (Equipment newItem)
     {
+
+        // удаляем перетаскиваемый итем из инвентаря
+        inventory.Remove(newItem);
         // Чекаем, какого типа является итем (из енумки). Приводим к инт
         int slotIndex = (int)newItem.equipSlot;
-
+        
         Equipment oldItem = null;
+        // меняем иконку у слота эквипа, в который бросаем
+        equipSlots[slotIndex].AddItem(newItem);
 
-        // меняем иконку, но это надо перепроверить. вроде лишнее
-        equipSlots[slotIndex].icon.enabled = true;
-        equipSlots[slotIndex].icon.sprite = newItem.icon;
-        equipSlots[slotIndex].item = newItem;
 
-        // если в слоте есть итем - добавляем его в инвентарь
+        //если в слоте эквипа есть итем
         if (currentEquipment[slotIndex] != null)
         {
+            // храним его как старый 
             oldItem = currentEquipment[slotIndex];
+            // добавляем его в инвентарь
             inventory.Add(oldItem);
         }
+        // вызываем делегат для обновлении стат
         if (onEquipmentChanged != null)
         {
             onEquipmentChanged.Invoke(newItem, oldItem);
-            Debug.Log("DELEGAT APPEARED");
+            // Debug.Log("DELEGAT APPEARED");
         }
-            // Помещаем итем в массив на позицию, соответствующую числовому индексу в энумераторе
+        // Помещаем итем в массив на позицию, соответствующую числовому индексу в энумераторе
         currentEquipment[slotIndex] = newItem;
-
     }
 
-    public void UnequipFromItemPanel(Item item)
+    public void Unequip(InventorySlot slot)
     {
-        //Debug.Log("item name is " + item.name);
-
-        if (item is Equipment)
+        Equipment equipment = slot.item as Equipment;
+        if (equipment != null)
         {
-            Unquip((Equipment)item);
+            Unequip(equipment);
         }
     }
-
-    public void Unquip(Equipment item)
+    public void Unequip(Equipment item)
     {
         //чекаем, смогли ли мы добавить эквип в сумму (есть ли место)
         if (inventory.Add(item))
@@ -110,17 +131,14 @@ public class EquipmentManager : MonoBehaviour
             currentEquipment[slotIndex] = null;
 
             // удаляем иконки и дизейблим фон картинки
-            equipSlots[slotIndex].icon.enabled = false;
-            equipSlots[slotIndex].icon.sprite = null;
-            equipSlots[slotIndex].item = null;
+            equipSlots[slotIndex].ClearSlot();
+
             if (onEquipmentChanged != null)
                 onEquipmentChanged.Invoke(null, oldItem);
-
         }
         else
         {
             Debug.Log("МЕСТА В СУМКЕ НЕТ");
-
         }
     }
 }

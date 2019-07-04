@@ -89,4 +89,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 34268811444920815}
   item: {fileID: 0}
-  tooltip: {fileID: 0}

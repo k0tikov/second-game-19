@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8f0355fd36e31b4b82f4f7a1cd7487b, type: 3}
-  m_Name: helm
+  m_Name: potion
   m_EditorClassIdentifier: 
-  name: helm
-  icon: {fileID: 21300000, guid: fd6e4fc32c78509458fc45ea4a478ba8, type: 3}
+  name: potion
+  icon: {fileID: 21300000, guid: 6592b916f86b19e428db6f6847c7b6dd, type: 3}
   isDefaultItem: 0

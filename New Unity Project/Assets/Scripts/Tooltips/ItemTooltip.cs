@@ -1,8 +1,25 @@
-﻿using System.Text;
+﻿#pragma warning disable 649
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 public class ItemTooltip : MonoBehaviour
 {
+
+    #region Singleton
+
+    public static ItemTooltip instance;
+
+    void Awake()
+    {
+        if (instance != null)
+        {
+            return;
+        }
+
+        instance = this;
+    }
+    #endregion
+
 
     [SerializeField] Text itemNameText;
     [SerializeField] Text itemSlotText;
@@ -10,8 +27,20 @@ public class ItemTooltip : MonoBehaviour
 
     private StringBuilder sb = new StringBuilder();
 
-
-    public void ShowTooltip(Equipment item)
+    private void Start()
+    {
+        HideTooltip();
+    }
+    // Показываем тултип
+    public void ShowTooltip(InventorySlot slot)
+    {
+        Equipment equipment = slot.item as Equipment;
+        if (equipment != null)
+        {
+            ShowTooltip(equipment);
+        }
+    }
+    private void ShowTooltip(Equipment item)
     {
         itemNameText.text = item.name;
         itemSlotText.text = item.equipSlot.ToString();
@@ -24,8 +53,13 @@ public class ItemTooltip : MonoBehaviour
 
         gameObject.SetActive(true);
     }
+    // Скрываем тултип
+    public void HideTooltip(InventorySlot slot)
+    {
 
-    public void HideTooltip()
+        HideTooltip();
+    }
+    private void HideTooltip()
     {
         gameObject.SetActive(false);
     }

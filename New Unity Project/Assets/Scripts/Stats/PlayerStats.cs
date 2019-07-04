@@ -16,6 +16,7 @@ public class PlayerStats : CharacterStats
     #endregion
 
     StatPanel statPanel;
+    Inventory inventory;
 
     void Start()
     {
@@ -28,8 +29,6 @@ public class PlayerStats : CharacterStats
         // Обновляем статы (цифры) при старте. Тоже неправильно (наверное)
         statPanel.UpdateStatNames();
         statPanel.UpdateStatValues();
-        
-
     }
 
     public void OnEquipmentChanged (Equipment newItem, Equipment oldItem)
