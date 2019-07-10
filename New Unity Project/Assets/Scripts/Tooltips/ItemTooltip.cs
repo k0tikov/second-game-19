@@ -67,6 +67,7 @@ public class ItemTooltip : MonoBehaviour
     public void AddStat(int value, string statName)
     {
         if (value != 0)
+        { 
 
             if (sb.Length > 0)
                 sb.AppendLine();
@@ -77,5 +78,6 @@ public class ItemTooltip : MonoBehaviour
             sb.Append(value);
             sb.Append(" ");
             sb.Append(statName);
+        }
     }
 }

@@ -59,7 +59,7 @@ public class Inventory : MonoBehaviour
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
 
         // Right click
-        OnRightClickEvent += equipmentManager.Equip;
+        OnRightClickEvent += equipmentManager.InventoryRightClick;
         // Pointer enter
         OnPointerEnterEvent += itemTooltip.ShowTooltip;
         // Pointer exit
@@ -159,8 +159,8 @@ public class Inventory : MonoBehaviour
         {        
             draggedSlot = slot;
             draggableItem.sprite = slot.item.icon;
-            draggableItem.transform.position = Input.mousePosition;
             draggableItem.enabled = true;
+            draggableItem.transform.position = Input.mousePosition;
         }
     }
 
@@ -173,7 +173,10 @@ public class Inventory : MonoBehaviour
     public void Drag(InventorySlot slot)
     {
         if (draggableItem.enabled)
-            draggableItem.transform.position = Input.mousePosition;  
+        {
+            draggableItem.transform.position = Input.mousePosition;
+        }
+            
     }
 
     public void Drop(InventorySlot dropInventorySlot)

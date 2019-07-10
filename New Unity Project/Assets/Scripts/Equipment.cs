@@ -8,9 +8,9 @@ public class Equipment : Item
     public int armorMod;
     public int damageMod;
 
-    public override void Use ()
+    public override void Use (PlayerStats playerStats)
     {
-        base.Use();
+        //base.Use();
         // Equip the item
         //EquipmentManager.instance.Equip(this);
         // Remove it from the inventory

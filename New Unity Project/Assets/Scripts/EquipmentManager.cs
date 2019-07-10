@@ -18,6 +18,9 @@ public class EquipmentManager : MonoBehaviour
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChanged;
 
+    public delegate void OnUpdateHealthChanged(int health);
+    public OnUpdateHealthChanged onUpdateHealthChanged;
+
     public event Action<InventorySlot> OnPointerEnterEvent;
     public event Action<InventorySlot> OnPointerExitEvent;
     public event Action<InventorySlot> OnRightClickEvent;
@@ -29,6 +32,7 @@ public class EquipmentManager : MonoBehaviour
     Inventory inventory;
     StatPanel statPanel;
     ItemTooltip itemTooltip;
+    PlayerStats playerStats;
     public Transform equipmentParent;
 
     EquipSlot[] equipSlots;
@@ -38,7 +42,9 @@ public class EquipmentManager : MonoBehaviour
     {
         inventory = Inventory.instance;
         statPanel = StatPanel.instance;
+        playerStats = PlayerStats.instance;
         itemTooltip = ItemTooltip.instance;
+   
         // Cчитаем сколько элементов эквипа в энумераторе
         int numSlots = Enum.GetNames(typeof(EquipmentSlot)).Length;
         // Инициализируем массив длиной в кол-во элементов энумератора
@@ -73,12 +79,35 @@ public class EquipmentManager : MonoBehaviour
         }
     }
     // перегруженный метод, если передаем слот, а не итем
-    public void Equip(InventorySlot slot)
+    public void InventoryRightClick(InventorySlot slot)
     {
-        Equipment equipment = slot.item as Equipment;
-        if (equipment != null)
-        {    
-            Equip(equipment);
+
+        ////if Equipment equipment = slot.item as Equipment;
+        //if (equipment != null)
+        //{    
+        //    Equip(equipment);
+        //}
+
+        // если в слоте эквип - надеваем по обычному
+        if (slot.item is Equipment)
+        {
+            Equip((Equipment)slot.item);
+        }
+        // если в слоте используемый итем
+        else if (slot.item is UsableItem){
+
+            UsableItem usableItem = slot.item as UsableItem;
+            // и если его можно выпить/съесть
+            if (usableItem.isConsumable)
+            {
+                // используем итем
+                //slot.item.Use(playerStats);
+                // удаляем его из инвентаря
+                inventory.Remove(usableItem);
+                // вызываем делегат для обновления ?? забыл
+                if (onUpdateHealthChanged != null)
+                    onUpdateHealthChanged.Invoke(usableItem.healthRestore);
+            }
         }
     }
     public void Equip (Equipment newItem)

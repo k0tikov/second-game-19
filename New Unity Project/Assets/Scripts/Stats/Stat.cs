@@ -9,10 +9,6 @@ public class Stat {
     public int baseValue;
     public int test;
 
-
-    //public float Value { get { return CalculateFinalValue(); } }
-
-
     private List<int> modifiers = new List<int>();
 
     public void AddModifier(int modifier)
